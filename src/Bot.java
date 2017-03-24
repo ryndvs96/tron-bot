@@ -1,5 +1,5 @@
 import java.util.*;
-import java.awt.*;
+import java.awt.Point;
 
 public class Bot {
 
@@ -31,6 +31,49 @@ public class Bot {
 
   public static String vorMove() {
     // vor move move
+    // current position
+    Point curr = myPosition();
+   
+    return ""; 
+  }
+
+  // bfs
+  public static int[][] bfs(Point start, int[][] grid) {
+    // queue
+    LinkedList<Point> q = new LinkedList<>();
+    q.addLast(start);
+
+    HashSet<String> set = new HashSet<>();
+    while (!q.isEmpty()) {
+      Point p = q.removeFirst();
+      List<Point> neighbors = nbs(p, grid);
+    }
+    
+    
+    return grid;
+  }
+
+  public static ArrayList<Point> nbs(Point p, int[][] grid) {
+    ArrayList<Point> list = new ArrayList<>();
+    for (int i = -1; i < 2; i++) {
+      for (int j = -1; j < 2; j++) {
+        int pi = p.x + i;
+        int pj = p.y + j;
+        if (i == j || !inBoard(pi, pj, grid) || grid[pi][pj] != 0) 
+          continue;
+        
+        list.add(new Point(pi, pj));
+      }
+    }
+    return list;
+  }
+
+  public static boolean inBoard(int i, int j, int[][] grid) {
+    return i >= 0 && i < grid.length && j >= 0 && j < grid.length;
+  }
+
+  public static Point myPosition() {
+    return new Point(myCurrentRow, myCurrentColumn);
   }
 
   //Small helper Method

@@ -12,7 +12,7 @@ public class Bot {
   public static void main(String[] args) {
     System.out.println("I am alive");
     Connection.connect();
-}
+  }
 
   /*===========================================
     Start writing your code here!
@@ -35,5 +35,5 @@ public class Bot {
       return false;
     }
     return true;
-    }
+  }
 }

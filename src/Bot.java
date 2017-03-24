@@ -1,3 +1,6 @@
+import java.util.*;
+import java.awt.*;
+
 public class Bot {
 
   final static String AUTH_KEY = "NHRTA1490394385793";
@@ -24,6 +27,10 @@ public class Bot {
     return "UP";
     //Return UP, DOWN, LEFT, or RIGHT to move that direction
     //Best of luck!
+  }
+
+  public static String vorMove() {
+    // vor move move
   }
 
   //Small helper Method

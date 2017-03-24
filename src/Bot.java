@@ -1,7 +1,6 @@
 public class Bot {
 
-  //TODO: HERE! IMPORTANT! Input your AUTH_KEY below!
-  final static String AUTH_KEY = "MyPasswordHere";
+  final static String AUTH_KEY = "NHRTA1490394385793";
 
   static Integer[][] gameBoard;
   static int myPlayerNumber;

@@ -10,7 +10,7 @@ public class Connection
   static String buffer = "";
   static Socket socket;
 
-  static boolean debugging = false;
+  static boolean debugging = true;
   //Turning this to true will print Messages Sending and Recieving
 
   /**
@@ -46,6 +46,7 @@ public class Connection
         }
       }
     } catch(Exception e) {
+      e.printStackTrace();
       System.out.println(e.getMessage());
     }
   }
@@ -67,7 +68,9 @@ public class Connection
     //Process message
     if(words[0].equals("REQUEST_MOVE")) {
       buildBoard(words[1], words[2]);
+      System.out.println("making move");
       String direction = Bot.makeMove();
+      System.out.println("made move");
       writer.write("MOVE " + direction + ";");
       writer.flush();
     } else if (words[0].equals("PLAYER_DIED")) {
@@ -110,6 +113,8 @@ public class Connection
    * @param boardString Board given as one long string
    */
   private static void buildBoard(String size, String boardString) {
+    if (debugging)
+      System.out.println("Building Board!");
     if (Bot.gameBoard == null) {
       Bot.gameBoard = new Integer[Integer.parseInt(size)][Integer.parseInt(size)];
     }

@@ -1,6 +1,16 @@
 import java.util.*;
 import java.awt.Point;
 
+class DirPair {
+  public Point point;
+  public String direction;
+
+  DirPair(point, direction) {
+    this.point = point;
+    this.direction = direction;
+  }
+}
+
 public class Bot {
 
   final static String AUTH_KEY = "NHRTA1490394385793";
@@ -31,6 +41,47 @@ public class Bot {
     return move;
     //Return UP, DOWN, LEFT, or RIGHT to move that direction
     //Best of luck!
+  }
+
+  public static String survivalMode() {
+    ArrayList<DirPair> valid = validAdj(new Point(myCurrentRow, myCurrentColumn));
+    Collections.shuffle(valid);
+
+    for (DirPair validMove : valid) {
+      ArrayList<DirPair> wallNext = adj(validMove.point);
+      wallNext.removeIf(dp -> isInsideBoard(dp.point.x, dp.point.y) && gameBoard[dp.point.x][dp.point.y] == 0);
+      Collections.shuffle(wallNext);
+
+      if (wallNext.size() != 0) {
+        return wallNext.get(0).direction;
+      }
+    }
+
+    return "UP";
+  }
+
+  public static ArrayList<DirPair> validAdj(Point current) {
+    ArrayList<DirPair> valid = adj(current);
+
+    valid.removeIf(dp -> !isInsideBoard(dp.point.x, dp.point.y) || gameBoard[dp.point.x][dp.point.y] != 0);
+
+    return valid;
+  }
+
+  public static ArrayList<DirPair> adj(Point current) {
+    ArrayList<DirPair> adj = new ArrayList<Point>();
+
+    Point left = current.getLocation(); left.translate(0, -1);
+    Point right = current.getLocation(); right.translate(0, 1);
+    Point up = current.getLocation(); up.translate(-1, 0);
+    Point down = current.getLocation(); down.translate(1, 0);
+
+    adj.add(new DirPair(left, "LEFT"));
+    adj.add(new DirPair(right, "RIGHT"));
+    adj.add(new DirPair(up, "UP"));
+    adj.add(new DirPair(down, "DOWN"));
+
+    return adj;
   }
 
   public static String vorMove() {
@@ -163,6 +214,7 @@ public class Bot {
         q.addLast(n);
       }
     }
+    
     return grid;
   }
 
@@ -174,6 +226,7 @@ public class Bot {
           continue;
         int pi = p.x + i;
         int pj = p.y + j;
+        
         if (i == j || !inBoard(pi, pj, grid) || grid[pi][pj] == -1) 
           continue;
 

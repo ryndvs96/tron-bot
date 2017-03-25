@@ -5,7 +5,7 @@ class DirPair {
   public Point point;
   public String direction;
 
-  DirPair(point, direction) {
+  public DirPair(Point point, String direction) {
     this.point = point;
     this.direction = direction;
   }
@@ -15,11 +15,13 @@ public class Bot {
 
   final static String AUTH_KEY = "NHRTA1490394385793";
 
+  static boolean survive = false;
   static Integer[][] gameBoard;
   static int myPlayerNumber;
   static int totalPlayers;
   static int myCurrentRow;
   static int myCurrentColumn;
+  static boolean usingSurvival = false;
 
   public static void main(String[] args) {
     System.out.println("I am alive");
@@ -34,8 +36,13 @@ public class Bot {
       System.out.println("Game board was messed up coming into public void makeMove()");
       return "DOWN";
     }
-    
-    String move = vorMove();
+   
+    String move = "UP";
+    if (survive && usingSurvival) {
+      move = survivalMode();
+    } else {
+      move = vorMove();
+    }
     System.out.println("move : " + move);
     
     return move;
@@ -44,7 +51,7 @@ public class Bot {
   }
 
   public static String survivalMode() {
-    ArrayList<DirPair> valid = validAdj(new Point(myCurrentRow, myCurrentColumn));
+    ArrayList<DirPair> valid = validAdj(myPosition());
     Collections.shuffle(valid);
 
     for (DirPair validMove : valid) {
@@ -69,7 +76,7 @@ public class Bot {
   }
 
   public static ArrayList<DirPair> adj(Point current) {
-    ArrayList<DirPair> adj = new ArrayList<Point>();
+    ArrayList<DirPair> adj = new ArrayList<DirPair>();
 
     Point left = current.getLocation(); left.translate(0, -1);
     Point right = current.getLocation(); right.translate(0, 1);
@@ -107,7 +114,11 @@ public class Bot {
       int[][] myReach = bfs(p, myflat);
 
       int score = comp(myReach, theirReach);
-      if (best == null || score >= bestScore) {
+      if (score == -5000) {
+        survive = true;
+        return translate(p, mine);
+      }
+      if (best == null || score > bestScore) {
         best = p;
         bestScore = score;
       }
@@ -145,6 +156,7 @@ public class Bot {
     System.out.println("THEIR GRID");
     print(theirs);
 
+    boolean overlap = false;
     int myScore = 0;
     int theirScore = 0;
     int n = mine.length;
@@ -154,10 +166,15 @@ public class Bot {
           continue;
         if (mine[i][j] != 0 && mine[i][j] < theirs[i][j]) {
           myScore++;
+          overlap = true;
         } else if (mine[i][j] > theirs[i][j] && theirs[i][j] != 0) {
           theirScore++;
+          overlap = true;
         }
       }
+    }
+    if (!overlap && usingSurvival) {
+      return -5000; 
     }
     return myScore - theirScore;
   }
